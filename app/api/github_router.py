@@ -6,6 +6,7 @@ from app.services.chunking_services import chunk_all_files
 from app.services.file_service import extract_files
 from app.services.embedding_service import embedding_service
 from app.services.vector_db import store_chunks
+import os
 
 router = APIRouter()
 
@@ -14,6 +15,8 @@ router = APIRouter()
 def clone_github_repository(request: GitHubRequest):
 
     repo_path = clone_repository(request.repo_url)
+
+    repo_name=os.path.basename(repo_path)
 
     extracted_files=extract_files(repo_path)
 
@@ -39,12 +42,13 @@ def clone_github_repository(request: GitHubRequest):
     print("EMBEDDING DIMENSION:", len(embedded_chunks[0]["embedding"]))
 
 
-    store_chunks(embedded_chunks)
+    store_chunks(embedded_chunks,repo_name)
 
 
     
     return {
         "message": "Repository cloned successfully",
+        "repo_name": repo_name,
         "repo_path": repo_path,
         "total_files": len(extracted_files),
         "total_chunks": len(chunks)

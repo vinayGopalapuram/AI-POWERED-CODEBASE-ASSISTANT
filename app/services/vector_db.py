@@ -1,6 +1,7 @@
 from pinecone import Pinecone,ServerlessSpec
 import os
 
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -40,7 +41,7 @@ else:
 # print(pc.list_indexes())
 index = pc.Index(PINECONE_INDEX_NAME)
 
-def store_chunks(embedded_chunks):
+def store_chunks(embedded_chunks,repo_name):
     vectors = []
     # Convert every embedded chunk into Pinecone format
     for chunk in embedded_chunks:
@@ -68,14 +69,17 @@ def store_chunks(embedded_chunks):
             }
         )
     # Upload all prepared vectors to Pinecone
-    index.upsert(vectors=vectors)
+    index.upsert(
+        vectors=vectors,
+        namespace=repo_name)
     print(f"Stored {len(vectors)} chunks in Pinecone")
 
 # SEARCH PINECONE SUING THE USER QUERY THAT WAS VECTORIZED IN QUERY ROUTER
 
-def search_code(query_vector,top_k=5):
+def search_code(query_vector,repo_name,top_k=5):
     results=index.query(
-        vector=query_vector,top_k=top_k,include_metadata=True
+        vector=query_vector,top_k=top_k,include_metadata=True,
+        namespace=repo_name
     )
     # AS THE PINECONE RETURN SDK RESPONSE OBJECT AND NOT A PY DICT SO WE CONVERT THAT INTO PY DICT 
     matches=[]

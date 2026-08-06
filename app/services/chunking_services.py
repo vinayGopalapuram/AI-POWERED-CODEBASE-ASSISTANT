@@ -87,5 +87,5 @@ def chunk_all_files(extracted_files: list):
         except SyntaxError:
             continue
 
-    print(all_chunks)
+    # print(all_chunks)
     return all_chunks

@@ -38,7 +38,7 @@ class EmbeddingService:
 
             embedded_chunks.append(embedded_chunk)
 
-        print(embedded_chunks)
+        # print(embedded_chunks)
         return embedded_chunks
 
 

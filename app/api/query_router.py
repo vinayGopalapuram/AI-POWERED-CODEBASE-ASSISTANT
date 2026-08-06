@@ -12,7 +12,8 @@ def query_posting(request:queryrequest):
     question = es.generate_embedding(request.question)
 
     # USED TO SEARCH THE PINECONE DB FOR THE TOP  RELAVANT CODE CHUNKS
-    results=search_code(question)
+    results=search_code(question,
+                        request.repo_name)
 
     # PREPARE FOR LLM
     # That takes raw Pinecone results and creates something readable
@@ -22,7 +23,7 @@ def query_posting(request:queryrequest):
     answer=generate_answer(request.question,context)
 
     return{
-        "question": request.question,
+        # "question": request.question,
         # "context": context   
         "answer":answer  
     }
